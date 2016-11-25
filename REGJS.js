@@ -12,7 +12,10 @@ options: {}
 },{
 register: Scooter,
 options: {}
-}], function (err) {
+},{
+register: Blankie,
+options: {defaultSrc: '*'}
+}],function (err) {
 if (err) {
 throw err;
 }
@@ -20,16 +23,9 @@ throw err;
 
 server.route({
 method: 'GET',
-path: '/noscripthere',
-config: {
+path: '/',
 handler: function (request, reply) {
-reply('these settings are changed');
-},
-plugins: {
-blankie: {
-childSrc: '*'
-}
-}
+reply('Test negative for defaultSrc *');
 }
 });
 
