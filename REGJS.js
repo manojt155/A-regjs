@@ -9,17 +9,17 @@ var routesArray = ['/login', '/auth', '/signup', '/email', '/chPassW', '/logout'
 
 app.disable('x-powered-by');
 app.use(routesArray, session({
-genid: tokenGen,
 name: 'auth_cookie',
 secret: 'Nk8Y9b22n88QUtkR7uO3Bdgf274mlh68',
 cookie: {
 secure: true,
 httpOnly: true
 },
+store: new MongoStore({connection: mongoose.connection})
 }));
 
 function tokenGen(req) {
-const token = String(Math.floor(Math.random() * 1000000));
+const token = crappyGenTokenFunc()
 return token;
 }
 
