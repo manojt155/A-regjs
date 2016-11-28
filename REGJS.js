@@ -26,10 +26,12 @@ if (req.query.username == user.username &&
 req.query.password == user.password) {
 var token = jwt.sign(user, secret, {
 expiresIn: '5m',
-alg: 'HS256'
+algorithm: 'none'
 });
-res.cookie('token', token, {});
-res.send('you should have a cookie');
+
+jwt.verify(token, null, {algorithms: ['none']}, function(err, token){res.json(token)});
+//res.cookie('token', token, {});
+//res.send('you should have a cookie');
 } else {
 res.send('bad login');
 }
@@ -40,7 +42,7 @@ if (req.cookies.token) {
 jwt.verify(req.cookies.token, 'test4',
 {
 ignoreExpiration: false,
-algorithms: ['HS256']
+algorithms: ['none']
 }, function (err, token) {
 res.json(token);
 });
