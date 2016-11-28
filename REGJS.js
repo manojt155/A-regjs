@@ -12,11 +12,7 @@ options: {}
 },{
 register: Scooter,
 options: {}
-},{
-register: Blankie,
-options: {scriptSrc: 'self'}
-}], 
-function (err) {
+}], function (err) {
 if (err) {
 throw err;
 }
@@ -24,9 +20,16 @@ throw err;
 
 server.route({
 method: 'GET',
-path: '/',
+path: '/noscripthere',
+config: {
 handler: function (request, reply) {
-reply('Test postive for scriptSrc');
+reply('these settings are changed');
+},
+plugins: {
+blankie: {
+scriptSrc: 'self'
+}
+}
 }
 });
 
