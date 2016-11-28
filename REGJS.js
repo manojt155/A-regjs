@@ -1,6 +1,6 @@
 var Hapi = require('hapi');
-var Blankie = require('blankie');
 var Scooter = require('scooter');
+var Blankie = require('blankie');
 const Inert = require('inert');
 
 var server = new Hapi.Server();
@@ -21,21 +21,9 @@ throw err;
 
 server.route({
 method: 'GET',
-path: '/noscripthere',
-config: {
+path: '/',
 handler: function (request, reply) {
-reply('these settings are changed');
-},
-plugins: {
-blankie: {
-scriptSrc: 'unsafe-eval',
-defaultSrc: 'http:',
-frameAncestors: '*',
-frameSrc: '*',
-childSrc: '*',
-objectSrc: '*'
-}
-}
+reply('Hello World');
 }
 });
 
