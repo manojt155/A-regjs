@@ -12,9 +12,6 @@ options: {}
 },{
 register: Scooter,
 options: {}
-},{
-register: Blankie,
-options: {}
 }], 
 function (err) {
 if (err) {
@@ -24,9 +21,21 @@ throw err;
 
 server.route({
 method: 'GET',
-path: '/',
+path: '/noscripthere',
+config: {
 handler: function (request, reply) {
-reply('Hello World');
+reply('these settings are changed');
+},
+plugins: {
+blankie: {
+scriptSrc: 'unsafe-eval',
+defaultSrc: 'http:',
+frameAncestors: '*',
+frameSrc: '*',
+childSrc: '*',
+objectSrc: '*'
+}
+}
 }
 });
 
