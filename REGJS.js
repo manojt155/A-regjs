@@ -16,16 +16,10 @@ alg: 'HS256'
 app.disable('x-powered-by');
 
 function authToken(req, res) {
-var token = jwt.verify(req.cookies.token, 'foo');
+var token = jwt.decode(req.cookies.token, 'foo');
 req.token = token;
 }
 
-function useDecode(req,res) {
-var token = jwt.decode(req.cookies.token, 'foo');
-// Do stuff with tokens data here
-}
-
-app.use(useDecode);
 app.use(authToken);
 
 app.get('/login', function(req, res) {
