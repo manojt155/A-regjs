@@ -15,13 +15,6 @@ alg: 'HS256'
 };
 app.disable('x-powered-by');
 
-function authToken(req, res) {
-var token = jwt.decode(req.cookies.token, 'foo');
-req.token = token;
-}
-
-app.use(authToken);
-
 app.get('/login', function(req, res) {
 if (req.query.username == user.username &&
 req.query.password == user.password) {
@@ -38,7 +31,12 @@ res.send('bad login');
 
 app.get('/test', function (req, res) {
 if (req.cookies.token) {
-var foo = req.token
+jwt.decode(req.cookies.token, 'test4',
+{
+algorithms: ['HS256']
+}, function (err, token) {
+res.json(token);
+});
 } else {
 res.send('no token');
 }
