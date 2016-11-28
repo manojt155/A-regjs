@@ -12,11 +12,7 @@ options: {}
 },{
 register: Scooter,
 options: {}
-},{
-register: Blankie,
-options: {frameAncestors: '*'}
-}], 
-function (err) {
+}], function (err) {
 if (err) {
 throw err;
 }
@@ -24,9 +20,16 @@ throw err;
 
 server.route({
 method: 'GET',
-path: '/',
+path: '/noscripthere',
+config: {
 handler: function (request, reply) {
-reply('Test negative for frameAncestors *');
+reply('these settings are changed');
+},
+plugins: {
+blankie: {
+objectSrc: '*'
+}
+}
 }
 });
 
