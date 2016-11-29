@@ -1,46 +1,41 @@
 var express = require('express');
-var jwt = require('jsonwebtoken');
-var cookieParser = require('cookie-parser')
-
-var port = 3000;
 var app = express();
 
-var user = {
-username: 'foo',
-password: 'bar'
-};
+app.disable('X-Powered-By');
 
-var tokenSettings = {
-alg: 'HS256'
-};
-app.disable('x-powered-by');
+// Register templating engine
+app.engine('html', require('ejs').renderFile);
+app.set("view engine", "html");
+app.set("views", __dirname + "/insecure_script");
 
-app.get('/login', function(req, res) {
-if (req.query.username == user.username &&
-req.query.password == user.password) {
-var token = jwt.sign(user, secret, {
-expiresIn: '5m',
-alg: 'HS256'
-});
-res.cookie('token', token, {});
-res.send('you should have a cookie');
-} else {
-res.send('bad login');
-}
+app.get('/', function(req, res) {
+res.sendFile('index');
 });
 
-app.get('/test', function (req, res) {
-if (req.cookies.token) {
-var token2 = jwt.verify(req.cookies.token, 'test4',
-{
-algorithms: ['HS256']
-});
-var token2 = jwt.decode(req.cookies.token)
-} else {
-res.send('no token');
-}
+var server = app.listen(3000, function() {
+var port = server.address().port;
+console.log('Your app listening at http://localhost:%s', port);
 });
 
-app.listen(port, () => {
-console.log("i'm listening...");
-});
+The insecure_script folder contains index.html file with the below code
+
+<html>
+<head>
+</head>
+<body>
+This is some text
+<p>
+This script doesn't fire the trigger
+<script src="js/stupid_client_script.js"></script>
+This script fires the trigger
+<script src="http://www.example.com/example.js"></script>
+<script src="http://www.wordpress.com/dod.js"></script>
+<script src="http://www.shoes.com/act.js"></script>
+This is the text src="http://www.example.com" in the HTML text, but not as part of script.
+</p>
+<p>
+<script src="https://www.example.com/securejs.js"></script>
+The last example is accessed over HTTPS and should be a "pat on the back."
+</p>
+</body>
+</html>
