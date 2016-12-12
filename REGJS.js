@@ -31,7 +31,8 @@ res.send('bad login');
 
 app.get('/test', function (req, res) {
 if (req.cookies.token) {
-jwt.decode(req.cookies.token, 'test4',
+var token1 = jwt.decode(req.cookies.token);
+var token2 = jwt.verify(req.cookies.token, 'test4',
 {
 algorithms: ['HS256']
 }, function (err, token) {
