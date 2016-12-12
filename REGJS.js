@@ -26,12 +26,10 @@ if (req.query.username == user.username &&
 req.query.password == user.password) {
 var token = jwt.sign(user, secret, {
 expiresIn: '5m',
-algorithm: 'HS256'
+alg: 'HS256'
 });
-
-jwt.verify(token, null, {algorithms: ['HS256']}, function(err, token){res.json(token)});
-//res.cookie('token', token, {});
-//res.send('you should have a cookie');
+res.cookie('token', token, {});
+res.send('you should have a cookie');
 } else {
 res.send('bad login');
 }
@@ -41,7 +39,7 @@ app.get('/test', function (req, res) {
 if (req.cookies.token) {
 jwt.verify(req.cookies.token, 'test4',
 {
-ignoreExpiration: false,
+ignoreExpiration: true,
 algorithms: ['HS256']
 }, function (err, token) {
 res.json(token);
@@ -55,7 +53,7 @@ app.get('/test2', function (req, res) {
 if (req.cookies.token) {
 jwt.verify(req.cookies.token, 'test4',
 {
-ignoreNotBefore: false,
+ignoreNotBefore: true,
 algorithms: ['HS256']
 }, function (err, token) {
 res.json(token);
@@ -69,21 +67,8 @@ app.get('/test3', function (req, res) {
 if (req.cookies.token) {
 jwt.verify(req.cookies.token, 'test4',
 {
-ignoreNotBefore: false,
-ignoreExpiration: false,
-algorithms: ['HS256']
-}, function (err, token) {
-res.json(token);
-});
-} else {
-res.send('no token');
-}
-});
-
-app.get('/test4', function (req, res) {
-if (req.cookies.token) {
-jwt.verify(req.cookies.token, 'test4',
-{
+ignoreNotBefore: true,
+ignoreExpiration: true,
 algorithms: ['HS256']
 }, function (err, token) {
 res.json(token);
