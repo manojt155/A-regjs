@@ -35,8 +35,9 @@ var token2 = jwt.verify(req.cookies.token, 'test4',
 {
 algorithms: ['HS256']
 }, function (err, token) {
-res.json(token);
-});p
+var token2 = jwt.decode(req.cookies.token)
+res.json(token2);
+});
 } else {
 res.send('no token');
 }
