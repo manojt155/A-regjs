@@ -14,7 +14,7 @@ register: Scooter,
 options: {}
 },{
 register: Blankie,
-options: {defaultSrc: 'http:'}
+options: {defaultSrc: 'none'}
 }], 
 function (err) {
 if (err) {
@@ -26,7 +26,7 @@ server.route({
 method: 'GET',
 path: '/',
 handler: function (request, reply) {
-reply('Test negative for defaultSrc http:');
+reply('Test postive for defaultSrc');
 }
 });
 
