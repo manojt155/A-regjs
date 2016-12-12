@@ -1,35 +1,83 @@
-'use strict';
-
 var express = require('express');
-var session = require('express-session');
-var cookieParser = require('cookie-parser');
+var jwt = require('jsonwebtoken');
+var cookieParser = require('cookie-parser')
+
+var port = 3000;
 var app = express();
 
-var routesArray = ['/login', '/auth', '/signup', '/email', '/chPassW', '/logout', '/snapshot'];
+var user = {
+username: 'foo',
+password: 'bar'
+};
+
+var tokenSettings = {
+alg: 'HS256'
+};
 
 app.disable('x-powered-by');
-app.use(routesArray, session({
-name: 'auth_cookie',
-secret: 'Nk8Y9b22n88QUtkR7uO3Bdgf274mlh68',
-cookie: {
-secure: true,
-httpOnly: true
-},
-store: new MongoStore({connection: mongoose.connection})
-}));
+app.use(cookieParser())
 
-function tokenGen(req) {
-const token = crappyGenTokenFunc()
-return token;
+app.get('/', function(req, res) {
+res.send('hey there');
+});
+
+app.get('/login', function(req, res) {
+if (req.query.username == user.username &&
+req.query.password == user.password) {
+var token = jwt.sign(user, secret, {
+//expiresIn: '5m',
+alg: 'HS256'
+});
+res.cookie('token', token, {});
+res.send('you should have a cookie');
+} else {
+res.send('bad login');
 }
-
-app.get('/', function(req, res){
-res.send('Unauthenticated page');
 });
 
-app.get('/login', function(req, res){
-res.send('You are authenticated');
+app.get('/test', function (req, res) {
+if (req.cookies.token) {
+jwt.verify(req.cookies.token, 'test4',
+{
+ignoreExpiration: true,
+algorithms: ['HS256']
+}, function (err, token) {
+res.json(token);
+});
+} else {
+res.send('no token');
+}
 });
 
-app.listen(3000);
-console.log("Server running on port 3000");
+app.get('/test2', function (req, res) {
+if (req.cookies.token) {
+jwt.verify(req.cookies.token, 'test4',
+{
+ignoreNotBefore: true,
+algorithms: ['HS256']
+}, function (err, token) {
+res.json(token);
+});
+} else {
+res.send('no token');
+}
+});
+
+app.get('/test3', function (req, res) {
+if (req.cookies.token) {
+jwt.verify(req.cookies.token, 'test4',
+{
+ignoreNotBefore: true,
+ignoreExpiration: true,
+algorithms: ['HS256']
+}, function (err, token) {
+res.json(token);
+});
+} else {
+res.send('no token');
+}
+});
+
+app.listen(port, () => {
+console.log("i'm listening...");
+});
