@@ -1,6 +1,6 @@
 var Hapi = require('hapi');
-var Scooter = require('scooter');
 var Blankie = require('blankie');
+var Scooter = require('scooter');
 const Inert = require('inert');
 
 var server = new Hapi.Server();
@@ -12,6 +12,9 @@ options: {}
 },{
 register: Scooter,
 options: {}
+},{
+register: Blankie,
+options: {scriptSrc: 'self'}
 }], 
 function (err) {
 if (err) {
@@ -23,7 +26,7 @@ server.route({
 method: 'GET',
 path: '/',
 handler: function (request, reply) {
-reply('Hello World');
+reply('Test postive for scriptSrc');
 }
 });
 
