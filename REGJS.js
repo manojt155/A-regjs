@@ -1,38 +1,35 @@
-var Hapi = require('hapi');
-var Blankie = require('blankie');
-var Scooter = require('scooter');
-const Inert = require('inert');
+'use strict';
 
-var server = new Hapi.Server();
-server.connection({ port: 3000 });
+var express = require('express');
+var session = require('express-session');
+var cookieParser = require('cookie-parser');
+var app = express();
 
-server.register([{
-register: Inert,
-options: {}
-},{
-register: Scooter,
-options: {}
-}], function (err) {
-if (err) {
-throw err;
-}
-});
+var routesArray = ['/login', '/auth', '/signup', '/email', '/chPassW', '/logout', '/snapshot'];
 
-server.route({
-method: 'GET',
-path: '/noscripthere',
-config: {
-handler: function (request, reply) {
-reply('these settings are changed');
+app.disable('x-powered-by');
+app.use(routesArray, session({
+genid: tokenGen,
+name: 'auth_cookie',
+secret: 'Nk8Y9b22n88QUtkR7uO3Bdgf274mlh68',
+cookie: {
+secure: true,
+httpOnly: true
 },
-plugins: {
-blankie: {
-scriptSrc: 'self'
+}));
+
+function tokenGen(req) {
+const token = String(Math.floor(Math.random() * 1000000));
+return token;
 }
-}
-}
+
+app.get('/', function(req, res){
+res.send('Unauthenticated page');
 });
 
-server.start(function () {
-console.log('info', 'Server running at: ' + server.info.uri);
+app.get('/login', function(req, res){
+res.send('You are authenticated');
 });
+
+app.listen(3000);
+console.log("Server running on port 3000");
