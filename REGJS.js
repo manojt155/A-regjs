@@ -25,7 +25,7 @@ app.get('/login', function(req, res) {
 if (req.query.username == user.username &&
 req.query.password == user.password) {
 var token = jwt.sign(user, secret, {
-//expiresIn: '5m',
+expiresIn: '5m',
 alg: 'HS256'
 });
 res.cookie('token', token, {});
@@ -39,7 +39,7 @@ app.get('/test', function (req, res) {
 if (req.cookies.token) {
 jwt.verify(req.cookies.token, 'test4',
 {
-ignoreExpiration: true,
+ignoreExpiration: false,
 algorithms: ['HS256']
 }, function (err, token) {
 res.json(token);
@@ -53,7 +53,7 @@ app.get('/test2', function (req, res) {
 if (req.cookies.token) {
 jwt.verify(req.cookies.token, 'test4',
 {
-ignoreNotBefore: true,
+ignoreNotBefore: false,
 algorithms: ['HS256']
 }, function (err, token) {
 res.json(token);
@@ -67,8 +67,21 @@ app.get('/test3', function (req, res) {
 if (req.cookies.token) {
 jwt.verify(req.cookies.token, 'test4',
 {
-ignoreNotBefore: true,
-ignoreExpiration: true,
+ignoreNotBefore: false,
+ignoreExpiration: false,
+algorithms: ['HS256']
+}, function (err, token) {
+res.json(token);
+});
+} else {
+res.send('no token');
+}
+});
+
+app.get('/test4', function (req, res) {
+if (req.cookies.token) {
+jwt.verify(req.cookies.token, 'test4',
+{
 algorithms: ['HS256']
 }, function (err, token) {
 res.json(token);
